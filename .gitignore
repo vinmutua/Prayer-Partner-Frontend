@@ -10,6 +10,7 @@
 /node_modules
 npm-debug.log
 yarn-error.log
+package-lock.json
 
 # IDEs and editors
 .idea/
@@ -40,3 +41,35 @@ testem.log
 # System files
 .DS_Store
 Thumbs.db
+
+# Environment files
+/src/environments/*.ts
+!/src/environments/*.template.ts
+
+# Local development
+*.local.ts
+*.local.js
+*.local.env
+
+# Debug files
+debug.log
+*.debug.log
+
+# Test coverage
+/coverage
+/.nyc_output
+/reports
+
+# Build artifacts
+/.webpack
+/.angular
+*.js.map
+*.css.map
+
+# Local History
+/.lh
+
+# Editor backup files
+*~
+*.swp
+*.swo

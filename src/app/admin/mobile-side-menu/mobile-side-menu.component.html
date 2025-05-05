@@ -1,0 +1,163 @@
+<div *ngIf="isOpen" class="fixed inset-0 z-50 overflow-hidden" aria-labelledby="slide-over-title" role="dialog" aria-modal="true">
+  <div class="absolute inset-0 overflow-hidden">
+    <!-- Background overlay with blur effect -->
+    <div class="absolute inset-0 bg-gray-500 bg-opacity-50 backdrop-blur-sm transition-opacity animate-fadeIn" aria-hidden="true" (click)="onClose()"></div>
+
+    <!-- Side panel -->
+    <div class="pointer-events-none fixed inset-y-0 left-0 flex max-w-full">
+      <div class="pointer-events-auto relative w-screen max-w-[280px] animate-slideInLeft">
+        <div class="flex h-full flex-col overflow-y-auto bg-white dark:bg-gray-900 shadow-lg" (click)="stopPropagation($event)">
+          <!-- Header -->
+          <div class="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 px-4 py-4">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center space-x-3">
+                <div class="h-10 w-10 rounded-md bg-blue-500 flex items-center justify-center">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                  </svg>
+                </div>
+                <div>
+                  <h2 class="text-lg font-medium text-gray-900 dark:text-white" id="slide-over-title">Prayer Partners</h2>
+                  <p class="text-xs text-gray-500 dark:text-gray-400" *ngIf="user">
+                    {{ user.firstName }} {{ user.lastName }}
+                  </p>
+                </div>
+              </div>
+              <button type="button" class="rounded-full p-1.5 text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800 focus:outline-none transition-colors" (click)="onClose()">
+                <span class="sr-only">Close panel</span>
+                <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- Quick Links -->
+          <div class="px-4 py-4 border-b border-gray-200 dark:border-gray-800">
+            <h3 class="text-xs uppercase tracking-wider text-gray-500 dark:text-gray-400 font-semibold mb-3">
+              <span class="flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                </svg>
+                Quick Links
+              </span>
+            </h3>
+            <div class="grid grid-cols-2 gap-3">
+              <button
+                (click)="viewCurrentPairings()"
+                class="flex flex-col items-center justify-center p-4 rounded-xl bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-900/10 text-blue-600 dark:text-blue-400 hover:shadow-md hover:from-blue-100 hover:to-blue-200 dark:hover:from-blue-900/30 dark:hover:to-blue-900/20 transition-all duration-300 border border-blue-200/50 dark:border-blue-800/30"
+              >
+                <div class="h-12 w-12 mb-3 flex items-center justify-center text-blue-500 dark:text-blue-400">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                  </svg>
+                </div>
+                <span class="text-sm font-medium">Current Pairings</span>
+              </button>
+              <button
+                (click)="viewPrayerThemes()"
+                class="flex flex-col items-center justify-center p-4 rounded-xl bg-gradient-to-br from-indigo-50 to-indigo-100 dark:from-indigo-900/20 dark:to-indigo-900/10 text-indigo-600 dark:text-indigo-400 hover:shadow-md hover:from-indigo-100 hover:to-indigo-200 dark:hover:from-indigo-900/30 dark:hover:to-indigo-900/20 transition-all duration-300 border border-indigo-200/50 dark:border-indigo-800/30"
+              >
+                <div class="h-12 w-12 mb-3 flex items-center justify-center text-indigo-500 dark:text-indigo-400">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3h7a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-7m0-18H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h7m0-18v18"></path>
+                  </svg>
+                </div>
+                <span class="text-sm font-medium">Prayer Themes</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Menu content -->
+          <div class="relative flex-1 py-3">
+            <div class="px-4">
+              <ul class="space-y-1">
+                <!-- Main menu sections -->
+                <li *ngFor="let section of menuSections">
+                  <!-- Section header -->
+                  <div
+                    [class]="'flex items-center justify-between px-3 py-2 cursor-pointer transition-colors duration-200 rounded-md ' +
+                             (activeTab === section.id ? 'bg-blue-50 dark:bg-blue-900/10 text-blue-600 dark:text-blue-400' :
+                             'hover:bg-gray-50 dark:hover:bg-gray-800/50 text-gray-700 dark:text-gray-300')"
+                    (click)="section.items.length > 0 ? toggleSection(section.id) : selectTab(section.id)"
+                  >
+                    <div class="flex items-center">
+                      <!-- Icon -->
+                      <div
+                        [class]="'flex-shrink-0 h-7 w-7 flex items-center justify-center mr-3 ' +
+                                 (activeTab === section.id ? 'text-blue-500 dark:text-blue-400' :
+                                 'text-gray-500 dark:text-gray-400')"
+                        [innerHTML]="getIconSvg(section.icon)"
+                      ></div>
+
+                      <!-- Title -->
+                      <span class="font-medium text-sm">{{ section.title }}</span>
+                    </div>
+
+                    <!-- Chevron for expandable sections -->
+                    <div *ngIf="section.items.length > 0">
+                      <svg
+                        [class]="'h-5 w-5 transform transition-transform duration-200 ' +
+                                 (expandedSection === section.id ? 'rotate-180 text-blue-500 dark:text-blue-400' :
+                                 'text-gray-400 dark:text-gray-500')"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 20 20"
+                        fill="currentColor"
+                      >
+                        <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                      </svg>
+                    </div>
+                  </div>
+
+                  <!-- Section items (submenu) -->
+                  <div
+                    *ngIf="section.items.length > 0"
+                    [class]="'overflow-hidden transition-all duration-300 ' +
+                             (expandedSection === section.id ? 'max-h-96' : 'max-h-0')"
+                  >
+                    <ul class="pl-8 pr-3 py-1 mt-1 space-y-1">
+                      <li *ngFor="let item of section.items">
+                        <button
+                          (click)="selectAction(section.id, item.id)"
+                          [class]="'w-full flex items-center px-3 py-2 rounded-md text-xs transition-colors duration-200 ' +
+                                   (item.id.startsWith('view') ? 'text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/10' :
+                                   'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800/50 hover:text-gray-900 dark:hover:text-gray-200')"
+                        >
+                          <!-- Item icon -->
+                          <div
+                            [class]="'flex-shrink-0 h-6 w-6 flex items-center justify-center mr-2 ' +
+                                    (item.id.startsWith('view') ? 'text-blue-500 dark:text-blue-400' :
+                                    'text-gray-500 dark:text-gray-400')"
+                            [innerHTML]="getIconSvg(item.icon)"
+                          ></div>
+
+                          <!-- Item title -->
+                          <span class="font-medium">{{ item.title }}</span>
+                        </button>
+                      </li>
+                    </ul>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Footer with logout -->
+          <div class="border-t border-gray-200 dark:border-gray-800 p-4">
+            <button
+              (click)="logout()"
+              class="w-full flex items-center px-3 py-2 rounded-md text-sm font-medium text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/10 transition-colors duration-200"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                <polyline points="16 17 21 12 16 7"></polyline>
+                <line x1="21" y1="12" x2="9" y2="12"></line>
+              </svg>
+              Sign out
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,122 @@
+// Modern header styles
+header {
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  transition: all 0.3s ease;
+
+  // Glass effect
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+
+  // Subtle animation on scroll
+  &.scrolled {
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    height: 3.5rem;
+  }
+}
+
+// Logo animation
+.logo-container {
+  position: relative;
+  overflow: hidden;
+
+  &:hover {
+    .logo-icon {
+      transform: rotate(360deg);
+    }
+  }
+
+  .logo-icon {
+    transition: transform 0.8s ease;
+  }
+}
+
+// Navigation links
+.nav-link {
+  position: relative;
+
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 50%;
+    width: 0;
+    height: 2px;
+    background: linear-gradient(to right, #3b82f6, #6366f1);
+    transition: width 0.3s ease, left 0.3s ease;
+  }
+
+  &:hover::after {
+    width: 100%;
+    left: 0;
+  }
+}
+
+// User avatar hover effect
+.user-avatar {
+  transition: transform 0.2s ease;
+
+  &:hover {
+    transform: scale(1.05);
+  }
+}
+
+// Dropdown menu animation
+.dropdown-menu {
+  transform-origin: top right;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+
+  &.hidden {
+    opacity: 0;
+    transform: scale(0.95);
+    pointer-events: none;
+  }
+
+  &.visible {
+    opacity: 1;
+    transform: scale(1);
+    pointer-events: auto;
+  }
+}
+
+// Mobile menu button animation
+.mobile-menu-button {
+  .line {
+    transition: all 0.3s ease;
+  }
+
+  &.open {
+    svg {
+      path {
+        transition: all 0.3s ease;
+        &:nth-child(1) {
+          transform: rotate(45deg) translate(5px, 5px);
+        }
+        &:nth-child(2) {
+          opacity: 0;
+        }
+        &:nth-child(3) {
+          transform: rotate(-45deg) translate(5px, -5px);
+        }
+      }
+    }
+  }
+}
+
+// Mobile menu animation
+.animate-slide-in-right {
+  animation: slideInRight 0.3s ease-in-out;
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}

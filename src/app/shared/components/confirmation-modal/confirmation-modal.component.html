@@ -1,0 +1,43 @@
+<div *ngIf="isOpen" class="fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+  <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center">
+    <!-- Background overlay with blur effect -->
+    <div class="fixed inset-0 bg-gray-500 bg-opacity-50 backdrop-blur-sm transition-opacity animate-fadeIn" aria-hidden="true" (click)="onCancel()"></div>
+
+    <!-- Modal panel -->
+    <div class="inline-block align-bottom bg-white dark:bg-gray-800 rounded-xl text-left overflow-hidden shadow-2xl transform transition-all w-full max-w-[90%] sm:max-w-md animate-slideIn"
+         (click)="stopPropagation($event)">
+      <!-- Header with warning icon -->
+      <div class="flex items-center border-b border-gray-200 dark:border-gray-700 px-5 py-4">
+        <div class="flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-lg bg-gradient-to-r from-red-500 to-red-600 mr-4 shadow-md">
+          <svg class="h-6 w-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+          </svg>
+        </div>
+        <h3 class="text-lg font-bold text-gray-900 dark:text-white" id="modal-title">
+          {{ title }}
+        </h3>
+      </div>
+
+      <!-- Content -->
+      <div class="bg-white dark:bg-gray-800 px-5 py-5">
+        <div class="w-full text-gray-700 dark:text-gray-300 text-base">
+          {{ message }}
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="bg-gray-50 dark:bg-gray-700 px-5 py-4 flex justify-end space-x-3">
+        <button type="button"
+                class="inline-flex justify-center rounded-lg border border-gray-300 dark:border-gray-600 shadow-sm px-4 py-2.5 bg-white dark:bg-gray-800 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200"
+                (click)="onCancel()">
+          {{ cancelButtonText }}
+        </button>
+        <button type="button"
+                [class]="'inline-flex justify-center rounded-lg border border-transparent shadow-sm px-4 py-2.5 text-sm font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 transition-colors duration-200 ' + confirmButtonClass"
+                (click)="onConfirm()">
+          {{ confirmButtonText }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

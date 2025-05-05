@@ -1,0 +1,88 @@
+<div *ngIf="isOpen" class="fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+  <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+    <!-- Background overlay with blur effect -->
+    <div class="fixed inset-0 bg-gray-500 bg-opacity-75 backdrop-blur-sm transition-opacity animate-fadeIn" aria-hidden="true" (click)="onClose()"></div>
+
+    <!-- Modal panel -->
+    <div class="inline-block align-bottom bg-white dark:bg-gray-800 rounded-xl text-left overflow-hidden shadow-2xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full animate-slideIn"
+         (click)="stopPropagation($event)">
+      <!-- Header with prayer icon -->
+      <div class="flex justify-between items-center border-b border-gray-200 dark:border-gray-700 px-6 py-4 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20">
+        <div class="flex items-center">
+          <div class="flex-shrink-0 flex items-center justify-center h-10 w-10 rounded-full bg-blue-100 dark:bg-blue-900 mr-3">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-600 dark:text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold text-gray-900 dark:text-white" id="modal-title">
+            Edit Prayer Request
+          </h3>
+        </div>
+        <button type="button" class="text-gray-400 hover:text-gray-500 focus:outline-none" (click)="onClose()">
+          <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+      
+      <!-- Content -->
+      <div class="bg-white dark:bg-gray-800 px-6 py-5">
+        <form [formGroup]="requestForm" (ngSubmit)="onSubmit()">
+          <div class="space-y-4">
+            <div>
+              <label for="content" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Prayer Request</label>
+              <textarea 
+                id="content" 
+                formControlName="content" 
+                rows="6" 
+                class="w-full px-3 py-2 text-gray-700 dark:text-gray-300 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600"
+                placeholder="Enter prayer request content..."
+              ></textarea>
+              <div *ngIf="formControls['content'].invalid && formControls['content'].touched" class="text-red-500 text-xs mt-1 animate-fadeIn">
+                <span *ngIf="formControls['content'].errors?.['required']">Prayer request content is required</span>
+                <span *ngIf="formControls['content'].errors?.['minlength']">Prayer request must be at least 5 characters</span>
+              </div>
+            </div>
+            
+            <div class="flex items-center">
+              <input 
+                type="checkbox" 
+                id="isActive" 
+                formControlName="isActive" 
+                class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+              >
+              <label for="isActive" class="ml-2 block text-sm text-gray-700 dark:text-gray-300">
+                Active
+              </label>
+            </div>
+            
+            <div *ngIf="prayerRequest" class="text-sm text-gray-500 dark:text-gray-400 mt-4 flex items-center">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+              <span>Created: {{ prayerRequest.createdAt | date:'medium' }}</span>
+            </div>
+          </div>
+          
+          <!-- Footer -->
+          <div class="mt-6 flex justify-end space-x-3">
+            <button 
+              type="button" 
+              class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200"
+              (click)="onClose()"
+            >
+              Cancel
+            </button>
+            <button 
+              type="submit" 
+              [disabled]="requestForm.invalid || isSubmitting"
+              class="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 transition-colors duration-200"
+            >
+              Save Changes
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,633 @@
+<div class="min-h-screen bg-gray-50">
+  <!-- Header is now handled by the shared header component -->
+
+  <!-- Mobile Side Menu -->
+  <app-mobile-side-menu
+    [isOpen]="isMobileSideMenuOpen"
+    [user]="user"
+    [activeTab]="activeTab"
+    (close)="closeMobileSideMenu()"
+    (tabChange)="onMobileTabChange($event)">
+  </app-mobile-side-menu>
+
+  <!-- Main content -->
+  <main>
+    <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+      <!-- Tabs - Mobile Menu Button and Desktop Tabs -->
+      <div class="mb-6">
+        <!-- Mobile Menu Button -->
+        <div class="md:hidden px-4 py-2">
+          <button
+            (click)="toggleMobileSideMenu()"
+            class="flex items-center justify-center w-full px-4 py-3 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg shadow-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+            <span class="font-medium">Admin Menu</span>
+          </button>
+        </div>
+
+        <!-- Desktop Tabs -->
+        <div class="hidden md:block border-b border-gray-200 overflow-x-auto">
+          <nav class="-mb-px flex space-x-8 px-2">
+            <button (click)="activeTab = 'users'"
+              class="py-4 px-1 border-b-2 font-medium text-sm whitespace-nowrap transition-colors duration-200"
+              [ngClass]="activeTab === 'users' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'">
+              Users
+            </button>
+            <button (click)="activeTab = 'pairings'"
+              class="py-4 px-1 border-b-2 font-medium text-sm whitespace-nowrap transition-colors duration-200"
+              [ngClass]="activeTab === 'pairings' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'">
+              Pairings
+            </button>
+            <button (click)="activeTab = 'themes'"
+              class="py-4 px-1 border-b-2 font-medium text-sm whitespace-nowrap transition-colors duration-200"
+              [ngClass]="activeTab === 'themes' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'">
+              Themes
+            </button>
+            <button (click)="activeTab = 'requests'"
+              class="py-4 px-1 border-b-2 font-medium text-sm whitespace-nowrap transition-colors duration-200"
+              [ngClass]="activeTab === 'requests' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'">
+              Prayer Requests
+            </button>
+            <button (click)="activeTab = 'my-partners'"
+              class="py-4 px-1 border-b-2 font-medium text-sm whitespace-nowrap transition-colors duration-200"
+              [ngClass]="activeTab === 'my-partners' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'">
+              My Prayer Partners
+            </button>
+          </nav>
+        </div>
+      </div>
+
+      <!-- Users Tab -->
+      <div *ngIf="activeTab === 'users'" class="bg-white shadow overflow-hidden sm:rounded-lg">
+        <div class="px-4 py-5 sm:px-6 flex justify-between items-center">
+          <h2 class="text-lg leading-6 font-medium text-gray-900">User Management</h2>
+          <button (click)="openAddUserForm()" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+            Add User
+          </button>
+        </div>
+
+        <!-- User List -->
+        <div class="overflow-x-auto">
+          <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50">
+              <tr>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Role</th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+              </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+              <tr *ngFor="let user of users">
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="text-sm font-medium text-gray-900">{{ user.firstName }} {{ user.lastName }}</div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="text-sm text-gray-500">{{ user.email }}</div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full"
+                    [ngClass]="user.role === 'ADMIN' ? 'bg-purple-100 text-purple-800' : 'bg-green-100 text-green-800'">
+                    {{ user.role }}
+                  </span>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full"
+                    [ngClass]="user.active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'">
+                    {{ user.active ? 'Active' : 'Inactive' }}
+                  </span>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                  <button (click)="editUser(user)" class="text-blue-600 hover:text-blue-900 mr-4">Edit</button>
+                  <button (click)="deleteUser(user.id)" class="text-red-600 hover:text-red-900">Delete</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Pairings Tab -->
+      <div *ngIf="activeTab === 'pairings'" class="bg-white dark:bg-gray-800 shadow-lg overflow-hidden sm:rounded-xl border border-gray-100 dark:border-gray-700">
+        <div class="px-6 py-6 sm:px-8 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-gray-800 dark:to-gray-750 border-b border-gray-100 dark:border-gray-700">
+          <div class="flex flex-col md:flex-row md:justify-between md:items-center">
+            <div class="flex items-center mb-4 md:mb-0">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-blue-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+              </svg>
+              <h2 class="text-xl font-semibold text-gray-900 dark:text-white">Prayer Pairings</h2>
+            </div>
+
+            <div class="flex flex-wrap gap-2">
+              <button (click)="openGeneratePairingsForm()"
+                class="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-200 shadow-sm">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                </svg>
+                Generate New
+              </button>
+
+              <button (click)="clearAllPairings()"
+                class="inline-flex items-center px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition-all duration-200 shadow-sm">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                </svg>
+                Clear All
+              </button>
+
+              <div class="relative">
+                <button (click)="toggleActionsDropdown()"
+                  class="actions-dropdown-button inline-flex items-center px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-all duration-200 shadow-sm">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  Actions
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" [class.rotate-180]="isActionsDropdownOpen" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
+
+                <div *ngIf="isActionsDropdownOpen" class="actions-dropdown-menu absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-lg py-1 border border-gray-200 dark:border-gray-700 z-10 animate-fadeIn">
+                  <button (click)="exportPairingsCSV()" class="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                    </svg>
+                    Export CSV
+                  </button>
+
+                  <button (click)="exportPairingsToPdf()" class="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                    Export PDF
+                  </button>
+
+                  <button (click)="sendPartnerEmails()" class="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2 text-purple-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                    </svg>
+                    Send Partner Emails
+                  </button>
+
+                  <button (click)="sendReminderEmails()" class="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2 text-yellow-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    Send Reminder Emails
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Current Pairings -->
+        <div class="px-6 py-6 sm:px-8">
+          <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-6">
+            <h3 class="text-lg font-semibold text-gray-900 dark:text-white flex items-center mb-4 sm:mb-0">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+              </svg>
+              Current Pairings
+            </h3>
+
+            <!-- Search and filter -->
+            <div class="relative">
+              <input type="text" placeholder="Search pairings..."
+                class="pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full sm:w-64 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                [(ngModel)]="pairingSearchTerm">
+              <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <!-- Legend for prayer direction -->
+          <div class="flex flex-wrap items-center gap-4 mb-6 text-sm bg-blue-50 dark:bg-blue-900/20 p-3 rounded-lg border border-blue-100 dark:border-blue-800">
+            <div class="flex items-center">
+              <div class="flex-shrink-0 h-6 w-6 rounded-full bg-blue-100 dark:bg-blue-800 flex items-center justify-center mr-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 text-blue-600 dark:text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m-8 6H4m0 0l4 4m-4-4l4-4" />
+                </svg>
+              </div>
+              <span class="text-gray-700 dark:text-gray-300">Person praying</span>
+            </div>
+
+            <div class="flex items-center">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+              </svg>
+              <span class="text-gray-700 dark:text-gray-300 ml-1">Prays for</span>
+            </div>
+
+            <div class="flex items-center">
+              <div class="flex-shrink-0 h-6 w-6 rounded-full bg-green-100 dark:bg-green-800 flex items-center justify-center mr-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 text-green-600 dark:text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122" />
+                </svg>
+              </div>
+              <span class="text-gray-700 dark:text-gray-300">Person being prayed for</span>
+            </div>
+          </div>
+
+          <div *ngIf="currentPairings.length > 0" class="overflow-x-auto rounded-lg border border-gray-200 dark:border-gray-700">
+            <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+              <thead class="bg-gray-50 dark:bg-gray-800">
+                <tr>
+                  <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Period</th>
+                  <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Praying</th>
+                  <th scope="col" class="text-center text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider" style="width: 40px; padding: 0;">
+                    <div class="flex justify-center">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                      </svg>
+                    </div>
+                  </th>
+                  <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Being Prayed For</th>
+                  <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Theme</th>
+                  <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Status</th>
+                  <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Actions</th>
+                </tr>
+              </thead>
+              <tbody class="bg-white dark:bg-gray-900 divide-y divide-gray-200 dark:divide-gray-700">
+                <tr *ngFor="let pairing of filteredPairings" class="hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                  <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                    <div class="flex flex-col">
+                      <span>{{ formatDate(pairing.startDate) }}</span>
+                      <span class="text-xs text-gray-400 dark:text-gray-500">to {{ formatDate(pairing.endDate) }}</span>
+                    </div>
+                  </td>
+                  <td class="px-4 py-3 whitespace-nowrap">
+                    <div class="flex items-center">
+                      <div class="flex-shrink-0 h-8 w-8 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center">
+                        <span class="text-sm font-medium text-blue-600 dark:text-blue-400">
+                          {{ pairing.partner1.firstName.charAt(0) }}{{ pairing.partner1.lastName.charAt(0) }}
+                        </span>
+                      </div>
+                      <div class="ml-3 max-w-[150px]">
+                        <div class="text-sm font-medium text-gray-900 dark:text-white truncate">{{ pairing.partner1.firstName }} {{ pairing.partner1.lastName }}</div>
+                        <div class="text-xs text-gray-500 dark:text-gray-400 truncate">{{ pairing.partner1.email }}</div>
+                      </div>
+                    </div>
+                  </td>
+                  <!-- Arrow indicating prayer direction -->
+                  <td class="whitespace-nowrap relative" style="width: 40px; padding: 0;">
+                    <div class="flex items-center justify-center">
+                      <div class="bg-blue-50 dark:bg-blue-900/30 rounded-full p-1.5 shadow-sm">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-blue-500 dark:text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                        </svg>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="px-4 py-3 whitespace-nowrap">
+                    <div class="flex items-center">
+                      <div class="flex-shrink-0 h-8 w-8 rounded-full bg-green-100 dark:bg-green-900 flex items-center justify-center">
+                        <span class="text-sm font-medium text-green-600 dark:text-green-400">
+                          {{ pairing.partner2.firstName.charAt(0) }}{{ pairing.partner2.lastName.charAt(0) }}
+                        </span>
+                      </div>
+                      <div class="ml-3 max-w-[150px]">
+                        <div class="text-sm font-medium text-gray-900 dark:text-white truncate">{{ pairing.partner2.firstName }} {{ pairing.partner2.lastName }}</div>
+                        <div class="text-xs text-gray-500 dark:text-gray-400 truncate">{{ pairing.partner2.email }}</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="px-4 py-3 whitespace-nowrap max-w-[120px]">
+                    <div class="text-sm font-medium text-gray-900 dark:text-white truncate">{{ pairing.theme.title }}</div>
+                  </td>
+                  <td class="px-4 py-3 whitespace-nowrap">
+                    <div class="flex items-center space-x-2">
+                      <!-- Special/Regular indicator -->
+                      <span *ngIf="pairing.isSpecialPairing" class="px-2 py-1 inline-flex text-xs leading-4 font-medium rounded-full bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-300">
+                        Triangle
+                      </span>
+                      <span *ngIf="!pairing.isSpecialPairing" class="px-2 py-1 inline-flex text-xs leading-4 font-medium rounded-full bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-300">
+                        Regular
+                      </span>
+
+                      <!-- Email status -->
+                      <span *ngIf="pairing.emailSent" class="px-2 py-1 inline-flex text-xs leading-4 font-medium rounded-full bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-300">
+                        Emailed
+                      </span>
+                      <span *ngIf="!pairing.emailSent" class="px-2 py-1 inline-flex text-xs leading-4 font-medium rounded-full bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-300">
+                        Not Sent
+                      </span>
+                    </div>
+                  </td>
+                  <td class="px-4 py-3 whitespace-nowrap text-right text-sm font-medium">
+                    <div class="flex items-center justify-end space-x-2">
+                      <button class="text-blue-600 dark:text-blue-400 hover:text-blue-900 dark:hover:text-blue-300"
+                        title="View prayer request"
+                        (click)="viewPrayerRequest(pairing)">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                        </svg>
+                      </button>
+                      <button class="text-indigo-600 dark:text-indigo-400 hover:text-indigo-900 dark:hover:text-indigo-300"
+                        title="Send email"
+                        (click)="sendEmailToPairing(pairing)">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                        </svg>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+
+                <!-- Empty state -->
+                <tr *ngIf="filteredPairings.length === 0 && !loading.pairings">
+                  <td colspan="7" class="px-4 py-8 text-center text-gray-500 dark:text-gray-400">
+                    <div class="flex flex-col items-center">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-gray-300 dark:text-gray-600 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                      </svg>
+                      <p class="text-lg font-medium">No pairings found</p>
+                      <p class="text-sm mt-1">
+                        {{ pairingSearchTerm ? 'Try a different search term or' : 'Click "Generate New" to' }} create new prayer pairings
+                      </p>
+                    </div>
+                  </td>
+                </tr>
+
+                <!-- Loading state -->
+                <tr *ngIf="loading.pairings">
+                  <td colspan="7" class="px-4 py-8 text-center text-gray-500 dark:text-gray-400">
+                    <div class="flex justify-center">
+                      <svg class="animate-spin h-8 w-8 text-blue-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                      </svg>
+                    </div>
+                    <p class="mt-2">Loading prayer pairings...</p>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div *ngIf="currentPairings.length === 0" class="text-center py-4">
+            <p class="text-gray-600">No active pairings found.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Themes Tab -->
+      <div *ngIf="activeTab === 'themes'" class="bg-white shadow overflow-hidden sm:rounded-lg">
+        <div class="px-4 py-5 sm:px-6 flex justify-between items-center">
+          <h2 class="text-lg leading-6 font-medium text-gray-900">Prayer Themes</h2>
+          <div class="flex space-x-2">
+            <button (click)="exportThemesToPdf()" class="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 flex items-center">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+              Export PDF
+            </button>
+            <button (click)="openAddThemeForm()" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+              Add Theme
+            </button>
+
+          </div>
+        </div>
+
+        <!-- Theme List -->
+        <div class="overflow-x-auto">
+          <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50">
+              <tr>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Title</th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Description</th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+              </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+              <tr *ngFor="let theme of themes">
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="text-sm font-medium text-gray-900">{{ theme.title }}</div>
+                </td>
+                <td class="px-6 py-4">
+                  <div class="text-sm text-gray-500 truncate max-w-xs">{{ theme.description }}</div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full"
+                    [ngClass]="theme.active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'">
+                    {{ theme.active ? 'Active' : 'Inactive' }}
+                  </span>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                  <button (click)="editTheme(theme)" class="text-blue-600 hover:text-blue-900 mr-4">Edit</button>
+                  <button (click)="deleteTheme(theme.id)" class="text-red-600 hover:text-red-900">Delete</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Prayer Requests Tab -->
+      <div *ngIf="activeTab === 'requests'" class="bg-white dark:bg-gray-800 shadow overflow-hidden sm:rounded-lg">
+        <div class="px-4 py-5 sm:px-6 flex justify-between items-center">
+          <h2 class="text-lg leading-6 font-medium text-gray-900 dark:text-white">Prayer Requests</h2>
+        </div>
+
+        <!-- Prayer Request List - Desktop -->
+        <div class="hidden md:block overflow-x-auto">
+          <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+            <thead class="bg-gray-50 dark:bg-gray-700">
+              <tr>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">User</th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Request</th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Date</th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Status</th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Actions</th>
+              </tr>
+            </thead>
+            <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+              <tr *ngFor="let request of prayerRequests">
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="text-sm font-medium text-gray-900 dark:text-white">{{ request.user?.firstName }} {{ request.user?.lastName }}</div>
+                  <div class="text-sm text-gray-500 dark:text-gray-400">{{ request.user?.email }}</div>
+                </td>
+                <td class="px-6 py-4">
+                  <div class="text-sm text-gray-900 dark:text-gray-300 max-w-md truncate">{{ request.content }}</div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="text-sm text-gray-500 dark:text-gray-400">{{ formatDate(request.createdAt) }}</div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full"
+                    [ngClass]="request.isActive ? 'bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-300' : 'bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-300'">
+                    {{ request.isActive ? 'Active' : 'Inactive' }}
+                  </span>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                  <div class="flex space-x-2">
+                    <button (click)="editPrayerRequest(request)" class="text-blue-600 dark:text-blue-400 hover:text-blue-900 dark:hover:text-blue-300">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                      </svg>
+                    </button>
+                    <button (click)="togglePrayerRequestStatus(request)" class="text-yellow-600 dark:text-yellow-400 hover:text-yellow-900 dark:hover:text-yellow-300">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m-4 6H4m0 0l4 4m-4-4l4-4" />
+                      </svg>
+                    </button>
+                    <button (click)="deletePrayerRequest(request.id)" class="text-red-600 dark:text-red-400 hover:text-red-900 dark:hover:text-red-300">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                      </svg>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Prayer Request List - Mobile -->
+        <div class="md:hidden">
+          <div class="space-y-4 px-4 py-2">
+            <div *ngFor="let request of prayerRequests" class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm p-4">
+              <div class="flex justify-between items-start mb-2">
+                <div>
+                  <h3 class="text-sm font-medium text-gray-900 dark:text-white">{{ request.user?.firstName }} {{ request.user?.lastName }}</h3>
+                  <p class="text-xs text-gray-500 dark:text-gray-400">{{ request.user?.email }}</p>
+                </div>
+                <span class="px-2 py-1 inline-flex text-xs leading-4 font-medium rounded-full"
+                  [ngClass]="request.isActive ? 'bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-300' : 'bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-300'">
+                  {{ request.isActive ? 'Active' : 'Inactive' }}
+                </span>
+              </div>
+
+              <div class="text-sm text-gray-900 dark:text-gray-300 mb-3 overflow-hidden max-h-12">
+                {{ request.content | slice:0:100 }}{{ request.content.length > 100 ? '...' : '' }}
+              </div>
+
+              <div class="flex items-center justify-between">
+                <div class="text-xs text-gray-500 dark:text-gray-400">
+                  {{ formatDate(request.createdAt) }}
+                </div>
+
+                <div class="flex space-x-3">
+                  <button (click)="editPrayerRequest(request)" class="text-blue-600 dark:text-blue-400 hover:text-blue-900 dark:hover:text-blue-300">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                    </svg>
+                  </button>
+                  <button (click)="togglePrayerRequestStatus(request)" class="text-yellow-600 dark:text-yellow-400 hover:text-yellow-900 dark:hover:text-yellow-300">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m-4 6H4m0 0l4 4m-4-4l4-4" />
+                    </svg>
+                  </button>
+                  <button (click)="deletePrayerRequest(request.id)" class="text-red-600 dark:text-red-400 hover:text-red-900 dark:hover:text-red-300">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="prayerRequests.length === 0 && !loading.requests" class="text-center py-8">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-gray-300 dark:text-gray-600 mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <p class="text-gray-600 dark:text-gray-400">No prayer requests found.</p>
+        </div>
+
+        <div *ngIf="loading.requests" class="text-center py-8">
+          <div class="flex justify-center">
+            <svg class="animate-spin h-8 w-8 text-blue-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+          </div>
+          <p class="mt-2 text-gray-600 dark:text-gray-400">Loading prayer requests...</p>
+        </div>
+      </div>
+
+      <!-- My Prayer Partners Tab -->
+      <div *ngIf="activeTab === 'my-partners'">
+        <app-admin-prayer-partner></app-admin-prayer-partner>
+      </div>
+    </div>
+  </main>
+
+  <!-- User Form Modal -->
+  <app-user-form
+    *ngIf="showAddUserForm"
+    [user]="selectedUser"
+    (save)="saveUser($event)"
+    (cancel)="showAddUserForm = false">
+  </app-user-form>
+
+  <!-- Theme Form Modal -->
+  <app-theme-form
+    *ngIf="showAddThemeForm"
+    [theme]="selectedTheme"
+    (save)="saveTheme($event)"
+    (cancel)="showAddThemeForm = false">
+  </app-theme-form>
+
+  <!-- Pairing Form Modal -->
+  <app-pairing-form
+    *ngIf="showGeneratePairingsForm"
+    [themes]="themes"
+    (generate)="generatePairings($event)"
+    (cancel)="showGeneratePairingsForm = false">
+  </app-pairing-form>
+
+  <!-- Delete Confirmation Modal -->
+  <app-confirmation-modal
+    [isOpen]="showDeleteConfirmModal"
+    [message]="deleteConfirmMessage"
+    (confirm)="confirmDelete()"
+    (cancel)="closeDeleteConfirmModal()">
+  </app-confirmation-modal>
+
+  <!-- Prayer Request View Modal -->
+  <app-prayer-request-modal
+    [isOpen]="showPrayerRequestModal"
+    [prayerRequest]="selectedPrayerRequest"
+    [partnerName]="selectedPrayerPartnerName"
+    (close)="closePrayerRequestModal()">
+  </app-prayer-request-modal>
+
+  <!-- Prayer Request Edit Modal -->
+  <app-prayer-request-edit-modal
+    [isOpen]="showPrayerRequestEditModal"
+    [prayerRequest]="selectedPrayerRequest"
+    (close)="closePrayerRequestEditModal()"
+    (save)="savePrayerRequest($event)">
+  </app-prayer-request-edit-modal>
+
+  <!-- Email Modal -->
+  <app-email-modal
+    [isOpen]="showEmailModal"
+    [pairing]="selectedPairing"
+    [isAllPairings]="isAllPairingsEmail"
+    [isReminder]="isReminderEmail"
+    (close)="closeEmailModal()"
+    (send)="sendEmail($event)">
+  </app-email-modal>
+
+  <!-- No Prayer Request Modal -->
+  <app-no-prayer-request-modal
+    [isOpen]="showNoPrayerRequestModal"
+    [partnerName]="selectedPrayerPartnerName"
+    [partner]="selectedPrayerPartnerForNoRequest"
+    (close)="closeNoPrayerRequestModal()"
+    (sendEmail)="sendEmailToPartnerWithNoRequest($event)">
+  </app-no-prayer-request-modal>
+
+</div>

@@ -12,7 +12,7 @@
     "build:dev": "ng build --configuration development",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "vercel-build": "ng build --configuration production",
+    "vercel-build": "npm run build:prod",
     "deploy": "vercel --prod"
   },
   "keywords": [],
@@ -43,7 +43,7 @@
     "typescript": "~5.5.0"
   },
   "engines": {
-    "node": ">=18.0.0",
-    "npm": ">=9.0.0"
+    "node": "18.x",
+    "npm": "9.x"
   }
 }

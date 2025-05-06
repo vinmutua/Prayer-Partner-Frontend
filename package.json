@@ -12,7 +12,7 @@
     "build:dev": "ng build --configuration development",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "vercel-build": "npm run build:prod",
+    "vercel-build": "ng build --configuration production",
     "deploy": "vercel --prod"
   },
   "keywords": [],
@@ -44,6 +44,6 @@
   },
   "engines": {
     "node": "18.x",
-    "npm": "^9.0.0"
+    "npm": "^10.8.2"
   }
 }

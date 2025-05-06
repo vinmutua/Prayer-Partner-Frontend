@@ -33,7 +33,28 @@
               "src/tailwind.css"
             ],
             "scripts": [],
-            "preserveSymlinks": true
+            "preserveSymlinks": true,
+            "budgets": [
+              {
+                "type": "initial",
+                "maximumWarning": "2mb",
+                "maximumError": "3mb"
+              },
+              {
+                "type": "anyComponentStyle",
+                "maximumWarning": "100kb",
+                "maximumError": "150kb"
+              }
+            ],
+            "allowedCommonJsDependencies": [
+              "canvg",
+              "html2canvas",
+              "jspdf",
+              "jspdf-autotable",
+              "dompurify",
+              "rgbcolor",
+              "raf"
+            ]
           },
           "configurations": {
             "production": {

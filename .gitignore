@@ -37,7 +37,8 @@ package-lock.json
 /libpeerconnection.log
 testem.log
 /typings
-
+.angular/
+.vercel/
 # System files
 .DS_Store
 Thumbs.db
@@ -45,6 +46,8 @@ Thumbs.db
 # Environment files
 /src/environments/*.ts
 !/src/environments/*.template.ts
+!/src/environments/environment.prod.ts
+!/src/environments/environment.ts
 
 # Local development
 *.local.ts
@@ -73,3 +76,4 @@ debug.log
 *~
 *.swp
 *.swo
+.vercel

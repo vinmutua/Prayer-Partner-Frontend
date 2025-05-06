@@ -5,23 +5,11 @@
       "src": "package.json",
       "use": "@vercel/static-build",
       "config": {
-        "installCommand": "npm install",
-        "buildCommand": "npm run build:prod",
-        "outputDirectory": "dist/prayer-partners-app"
+        "distDir": "dist/prayer-partners-app"
       }
     }
   ],
-  "buildCommand": "npm run build:prod",
-  "installCommand": "npm install",
-  "outputDirectory": "dist/prayer-partners-app",
   "routes": [
-    {
-      "handle": "filesystem"
-    },
-    {
-      "src": "/assets/(.*)",
-      "dest": "/assets/$1"
-    },
     {
       "src": "/(.*)",
       "dest": "/index.html"

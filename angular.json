@@ -38,12 +38,12 @@
               {
                 "type": "initial",
                 "maximumWarning": "2mb",
-                "maximumError": "3mb"
+                "maximumError": "5mb"
               },
               {
                 "type": "anyComponentStyle",
-                "maximumWarning": "100kb",
-                "maximumError": "150kb"
+                "maximumWarning": "50kb",
+                "maximumError": "100kb"
               }
             ],
             "allowedCommonJsDependencies": [

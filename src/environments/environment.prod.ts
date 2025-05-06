@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://prayer-partner-backend.onrender.com'
+  apiUrl: process.env['NEXT_PUBLIC_API_URL'] || 'https://prayer-partner-backend.onrender.com',
 };

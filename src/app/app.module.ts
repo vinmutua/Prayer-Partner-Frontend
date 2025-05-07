@@ -3,6 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import { HttpClientModule } from '@angular/common/http';
 
 import { AppComponent } from './app.component';
 import { CoreModule } from './core/core.module';
@@ -18,7 +19,8 @@ import { ErrorInterceptor } from './interceptors/error-interceptor.function';
     BrowserAnimationsModule,
     RouterModule.forRoot(routes),
     CoreModule,
-    SharedModule
+    SharedModule,
+    HttpClientModule
   ],
   providers: [
     provideHttpClient(withInterceptors([AuthInterceptor, ErrorInterceptor]))

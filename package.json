@@ -11,9 +11,7 @@
     "build:prod": "ng build --configuration production",
     "build:dev": "ng build --configuration development",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test",
-    "vercel-build": "ng build --configuration production",
-    "deploy": "vercel deploy --prod"
+    "test": "ng test"
   },
   "keywords": [],
   "author": "",

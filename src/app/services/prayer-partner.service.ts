@@ -61,20 +61,19 @@ export class PrayerPartnerService {
       );
   }
 
-  // Admin: Generate pairings for all active users
+  // Admin: Generate one-way circular pairings for all active users
   generatePairings(data: {
     startDate: Date | string;
     endDate: Date | string;
     themeId: number;
   }): Observable<ApiResponse<any>> {
-    // Convert dates to ISO strings if they're Date objects
-    const formattedData = {
-      startDate: data.startDate instanceof Date ? formatDateForApi(data.startDate) : data.startDate,
-      endDate: data.endDate instanceof Date ? formatDateForApi(data.endDate) : data.endDate,
-      themeId: data.themeId
-    };
-
-    return this.http.post<ApiResponse<any>>(`${this.apiUrl}/generate`, formattedData);
+    // The new one-way system doesn't need these parameters as it:
+    // 1. Automatically calculates dates (today + 30 days)
+    // 2. Randomly selects an active theme
+    // 3. Uses cryptographically secure shuffling
+    
+    // Call the new one-way circular pairing endpoint
+    return this.http.post<ApiResponse<any>>(`${this.apiUrl}/generate-monthly`, {});
   }
 
 

@@ -1,42 +1,43 @@
 <div class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50">
   <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-md">
-    <h2 class="text-xl font-semibold text-gray-900 mb-4">Generate New Prayer Pairings</h2>
+    <h2 class="text-xl font-semibold text-gray-900 mb-4">Generate One-Way Prayer Pairings</h2>
+    
+    
     
     <form [formGroup]="pairingForm" (ngSubmit)="onSubmit()">
       <div class="space-y-4">
-        <!-- Start Date -->
+        <!-- Note: These fields are for display/confirmation only -->
+        <p class="text-sm text-gray-600 italic">
+          Note: The form below is for reference only. The one-way system uses its own secure parameters.
+        </p>
+        
+        <!-- Start Date (Display only) -->
         <div>
-          <label for="startDate" class="block text-sm font-medium text-gray-700">Start Date</label>
-          <input type="date" id="startDate" formControlName="startDate"
-            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
-          <div *ngIf="pairingForm.get('startDate')?.invalid && pairingForm.get('startDate')?.touched" class="text-red-500 text-xs mt-1">
-            Start date is required
-          </div>
+          <label for="startDate" class="block text-sm font-medium text-gray-700">Start Date (Auto-calculated)</label>
+          <input type="date" id="startDate" formControlName="startDate" [disabled]="true"
+            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm bg-gray-100 text-gray-500 sm:text-sm">
+          <p class="text-xs text-gray-500 mt-1">System will use today's date</p>
         </div>
         
-        <!-- End Date -->
+        <!-- End Date (Display only) -->
         <div>
-          <label for="endDate" class="block text-sm font-medium text-gray-700">End Date</label>
-          <input type="date" id="endDate" formControlName="endDate"
-            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
-          <div *ngIf="pairingForm.get('endDate')?.invalid && pairingForm.get('endDate')?.touched" class="text-red-500 text-xs mt-1">
-            End date is required
-          </div>
+          <label for="endDate" class="block text-sm font-medium text-gray-700">End Date (Auto-calculated)</label>
+          <input type="date" id="endDate" formControlName="endDate" [disabled]="true"
+            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm bg-gray-100 text-gray-500 sm:text-sm">
+          <p class="text-xs text-gray-500 mt-1">System will use 30 days from today</p>
         </div>
         
-        <!-- Prayer Theme -->
+        <!-- Prayer Theme (Display only) -->
         <div>
-          <label for="themeId" class="block text-sm font-medium text-gray-700">Prayer Theme</label>
-          <select id="themeId" formControlName="themeId"
-            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
-            <option value="" disabled>Select a prayer theme</option>
+          <label for="themeId" class="block text-sm font-medium text-gray-700">Prayer Theme (Auto-selected)</label>
+          <select id="themeId" formControlName="themeId" [disabled]="true"
+            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm bg-gray-100 text-gray-500 sm:text-sm">
+            <option value="" disabled>System will randomly select an active theme</option>
             <option *ngFor="let theme of themes" [value]="theme.id" [disabled]="!theme.active">
               {{ theme.title }} {{ !theme.active ? '(Inactive)' : '' }}
             </option>
           </select>
-          <div *ngIf="pairingForm.get('themeId')?.invalid && pairingForm.get('themeId')?.touched" class="text-red-500 text-xs mt-1">
-            Please select a prayer theme
-          </div>
+          <p class="text-xs text-gray-500 mt-1">System will randomly choose from {{ getActiveThemeCount() }} active theme(s)</p>
         </div>
         
         <!-- Warning Message -->

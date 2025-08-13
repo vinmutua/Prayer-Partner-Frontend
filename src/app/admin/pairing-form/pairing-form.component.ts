@@ -18,14 +18,14 @@ export class PairingFormComponent implements OnInit {
   pairingForm: FormGroup;
 
   constructor(private fb: FormBuilder) {
-    // Set default dates (today and 7 days from now)
+    // Set default dates (today and 30 days from now)
     const today = new Date();
-    const nextWeek = new Date();
-    nextWeek.setDate(today.getDate() + 7);
+    const nextMonth = new Date();
+    nextMonth.setDate(today.getDate() + 30);
 
     this.pairingForm = this.fb.group({
       startDate: [this.formatDateForInput(today), Validators.required],
-      endDate: [this.formatDateForInput(nextWeek), Validators.required],
+      endDate: [this.formatDateForInput(nextMonth), Validators.required],
       themeId: ['', Validators.required]
     });
   }
@@ -48,6 +48,10 @@ export class PairingFormComponent implements OnInit {
 
   onCancel(): void {
     this.cancel.emit();
+  }
+
+  getActiveThemeCount(): number {
+    return this.themes.filter(theme => theme.active).length;
   }
 
   // Helper method to format date for input[type="date"]

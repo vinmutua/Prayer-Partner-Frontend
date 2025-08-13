@@ -148,6 +148,24 @@ export class AuthService {
     return localStorage.getItem('token');
   }
 
+  requestPasswordReset(email: string): Observable<ApiResponse<any>> {
+    return this.http.post<ApiResponse<any>>(`${this.apiUrl}/forgot-password`, { email })
+      .pipe(
+        catchError(error => {
+          return throwError(() => new Error(error.error?.message || 'Password reset request failed'));
+        })
+      );
+  }
+
+  resetPassword(token: string, newPassword: string): Observable<ApiResponse<any>> {
+    return this.http.post<ApiResponse<any>>(`${this.apiUrl}/reset-password`, { token, newPassword })
+      .pipe(
+        catchError(error => {
+          return throwError(() => new Error(error.error?.message || 'Password reset failed'));
+        })
+      );
+  }
+
   getCurrentUser(): User | null {
     return this.currentUserSubject.value;
   }

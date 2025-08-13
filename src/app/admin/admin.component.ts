@@ -443,25 +443,29 @@ export class AdminComponent implements OnInit {
     this.successMessage = '';
     this.loading.pairings = true;
 
+    // Note: The one-way system ignores form data and uses its own logic:
+    // - Automatic date calculation (today + 7 days)
+    // - Random theme selection from active themes
+    // - Cryptographically secure shuffling
     this.prayerPartnerService.generatePairings({
       startDate: pairingData.startDate,
       endDate: pairingData.endDate,
       themeId: pairingData.themeId
     }).subscribe({
       next: (response) => {
-        // Display a more detailed success message if available
-        if (response.data && response.data.clearedCount !== undefined) {
-          this.successMessage = `Successfully cleared ${response.data.clearedCount} existing pairings and created ${response.data.createdCount} new prayer pairings`;
+        // Handle new one-way system response format
+        if (response.data && response.data.count !== undefined) {
+          this.successMessage = `Successfully created ${response.data.count} one-way prayer pairings (${response.data.pairingType})`;
         } else {
-          this.successMessage = response.message || 'Successfully created prayer pairings';
+          this.successMessage = response.message || 'Successfully created one-way prayer pairings';
         }
         this.showGeneratePairingsForm = false;
         this.loadCurrentPairings();
         this.loading.pairings = false;
       },
       error: (error) => {
-        console.error('Error generating pairings:', error);
-        this.errorMessage = error.message || 'Failed to generate pairings. Please try again.';
+        console.error('Error generating one-way pairings:', error);
+        this.errorMessage = error.message || 'Failed to generate one-way pairings. Please try again.';
         this.loading.pairings = false;
       }
     });

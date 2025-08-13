@@ -6,7 +6,7 @@ import { ConfirmationModalComponent } from '../shared/components/confirmation-mo
 
 @Component({
   selector: 'app-prayer-request-form',
-  standalone: true,
+  standalone: true, 
   imports: [CommonModule, ReactiveFormsModule, ConfirmationModalComponent],
   template: `
     <div class="bg-white p-6 rounded-lg shadow-md">
@@ -90,17 +90,17 @@ export class PrayerRequestFormComponent implements OnInit {
   loadCurrentRequest(): void {
     this.prayerRequestService.getCurrentPrayerRequest().subscribe({
       next: (request) => {
-        this.currentRequest = request;
-        this.requestForm.patchValue({
-          content: request.content
-        });
+        if (request) {
+          this.currentRequest = request;
+          this.requestForm.patchValue({
+            content: request.content
+          });
+        }
+        // If request is null, that's fine - no current request exists
       },
       error: (error) => {
-        // It's okay if there's no current request
-        if (error.status !== 404) {
-          this.errorMessage = 'Error loading your current prayer request.';
-          console.error('Error loading prayer request:', error);
-        }
+        this.errorMessage = 'Error loading your current prayer request.';
+        console.error('Error loading prayer request:', error);
       }
     });
   }

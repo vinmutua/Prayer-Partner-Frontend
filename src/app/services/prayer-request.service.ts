@@ -50,15 +50,10 @@ export class PrayerRequestService {
   }
 
   // Get current user's active prayer request
-  getCurrentPrayerRequest(): Observable<PrayerRequest> {
-    return this.http.get<ApiResponse<PrayerRequest>>(`${this.apiUrl}/current`)
+  getCurrentPrayerRequest(): Observable<PrayerRequest | null> {
+    return this.http.get<ApiResponse<PrayerRequest | null>>(`${this.apiUrl}/current`)
       .pipe(
-        map(response => {
-          if (!response.data) {
-            throw new Error('No current prayer request found');
-          }
-          return response.data;
-        }),
+        map(response => response.data || null),
         catchError(error => {
           console.error('Error fetching current prayer request:', error);
           throw error;
@@ -118,15 +113,10 @@ export class PrayerRequestService {
   }
 
   // Admin: Get current prayer request for a specific user
-  getUserCurrentPrayerRequest(userId: number): Observable<PrayerRequest> {
-    return this.http.get<ApiResponse<PrayerRequest>>(`${this.apiUrl}/user/${userId}/current`)
+  getUserCurrentPrayerRequest(userId: number): Observable<PrayerRequest | null> {
+    return this.http.get<ApiResponse<PrayerRequest | null>>(`${this.apiUrl}/user/${userId}/current`)
       .pipe(
-        map(response => {
-          if (!response.data) {
-            throw new Error(`No current prayer request found for user ${userId}`);
-          }
-          return response.data;
-        }),
+        map(response => response.data || null),
         catchError(error => {
           console.error(`Error fetching current prayer request for user ${userId}:`, error);
           throw error;

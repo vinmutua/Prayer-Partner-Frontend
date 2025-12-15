@@ -95,4 +95,25 @@ export class UserService {
         })
       );
   }
+
+  // Update current user's own profile (non-admin)
+  updateOwnProfile(userData: {
+    email?: string;
+    firstName?: string;
+    lastName?: string;
+  }): Observable<User> {
+    return this.http.put<ApiResponse<User>>(`${this.authApiUrl}/profile`, userData)
+      .pipe(
+        map(response => {
+          if (!response.data) {
+            throw new Error('Failed to update profile');
+          }
+          return response.data;
+        }),
+        catchError(error => {
+          console.error('Error updating profile:', error);
+          throw error;
+        })
+      );
+  }
 }

@@ -110,7 +110,7 @@ export class AdminComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.user = this.authService.getCurrentUser();
+    this.user = this.authService.getCurrentUserValue();
 
     if (!this.user || this.user.role !== 'ADMIN') {
       this.router.navigate(['/login']);
@@ -475,27 +475,30 @@ export class AdminComponent implements OnInit {
     this.loading.pairings = true;
     this.errorMessage = '';
 
-    // Get the JWT token from auth service
-    const token = this.authService.getToken();
+    // Use the service method to download CSV with proper authentication
+    this.prayerPartnerService.exportPairingsToCSV().subscribe({
+      next: (blob: Blob) => {
+        // Create a blob URL and download the file
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        const date = new Date().toISOString().split('T')[0];
+        link.download = `prayer-pairings-${date}.csv`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(url);
 
-    if (!token) {
-      this.errorMessage = 'Authentication required. Please log in again.';
-      this.loading.pairings = false;
-      return;
-    }
-
-    // Create a link to download the CSV with authentication
-    const link = document.createElement('a');
-    // Add the token as a query parameter
-    link.href = `${this.prayerPartnerService.apiUrl}/export-csv?token=${token}`;
-    link.download = 'prayer-pairings.csv';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-
-    setTimeout(() => {
-      this.loading.pairings = false;
-    }, 1000);
+        this.loading.pairings = false;
+        this.toastService.showSuccess('Prayer pairings exported to CSV successfully');
+      },
+      error: (error: any) => {
+        console.error('Error exporting CSV:', error);
+        this.errorMessage = 'Failed to export CSV. Please try again.';
+        this.loading.pairings = false;
+        this.toastService.showError('Failed to export CSV');
+      }
+    });
   }
 
   exportPairingsToPdf(): void {
@@ -504,20 +507,33 @@ export class AdminComponent implements OnInit {
       return;
     }
 
-    try {
-      console.log('Exporting pairings to PDF...');
+    this.loading.pairings = true;
+    this.errorMessage = '';
 
-      // Use the direct approach that works in the test
-      this.pdfExportService.exportPairingsToPdf(
-        this.currentPairings,
-        'Current Prayer Pairings'
-      );
+    // Use the backend PDF export for complete data matching CSV
+    this.prayerPartnerService.exportPairingsToPDF().subscribe({
+      next: (blob: Blob) => {
+        // Create a blob URL and download the file
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        const date = new Date().toISOString().split('T')[0];
+        link.download = `prayer-pairings-${date}.pdf`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(url);
 
-      this.toastService.showSuccess('Prayer pairings exported to PDF successfully');
-    } catch (error: any) {
-      console.error('Error in exportPairingsToPdf:', error);
-      alert(`Error exporting pairings: ${error.message || 'Unknown error'}`);
-    }
+        this.loading.pairings = false;
+        this.toastService.showSuccess('Prayer pairings exported to PDF successfully');
+      },
+      error: (error: any) => {
+        console.error('Error exporting PDF:', error);
+        this.errorMessage = 'Failed to export PDF. Please try again.';
+        this.loading.pairings = false;
+        this.toastService.showError('Failed to export PDF');
+      }
+    });
   }
 
   // Theme management methods

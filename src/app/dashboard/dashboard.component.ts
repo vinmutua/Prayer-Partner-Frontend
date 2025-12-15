@@ -49,7 +49,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.user = this.authService.getCurrentUser();
+    this.user = this.authService.getCurrentUserValue();
 
     if (!this.user) {
       this.router.navigate(['/login']);
@@ -239,6 +239,19 @@ export class DashboardComponent implements OnInit, OnDestroy {
     } else {
       return pairing.partner1.email;
     }
+  }
+
+  getPartnerRole(pairing: PrayerPairing): string {
+    const userId = this.user?.id;
+    if (pairing.partner1.id === userId) {
+      return 'Prayed for';
+    } else {
+      return 'Prayed by';
+    }
+  }
+
+  isPrayingFor(pairing: PrayerPairing): boolean {
+    return pairing.partner1.id === this.user?.id;
   }
 
   // Export pairing history to PDF

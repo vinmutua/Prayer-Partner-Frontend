@@ -105,6 +105,13 @@ export class PrayerPartnerService {
     });
   }
 
+  // Admin: Export pairings to PDF (backend generated)
+  exportPairingsToPDF(): Observable<Blob> {
+    return this.http.get(`${this.apiUrl}/export-pdf`, {
+      responseType: 'blob'
+    });
+  }
+
   // Admin: Send email to a specific pairing
   sendEmailToPairing(pairingId: number, customMessage?: string): Observable<ApiResponse<any>> {
     return this.http.post<ApiResponse<any>>(`${this.apiUrl}/${pairingId}/send-email`, { customMessage });

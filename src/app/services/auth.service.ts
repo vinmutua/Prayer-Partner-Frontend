@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, throwError, of } from 'rxjs';
-import { catchError, tap, switchMap } from 'rxjs/operators';
+import { catchError, tap, switchMap, map } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { User, ApiResponse, AuthData } from '../types/api.types';
@@ -166,7 +166,34 @@ export class AuthService {
       );
   }
 
-  getCurrentUser(): User | null {
+  changePassword(currentPassword: string, newPassword: string): Observable<ApiResponse<any>> {
+    return this.http.post<ApiResponse<any>>(`${this.apiUrl}/change-password`, { currentPassword, newPassword })
+      .pipe(
+        catchError(error => {
+          return throwError(() => error);
+        })
+      );
+  }
+
+  getCurrentUser(): Observable<User> {
+    return this.http.get<ApiResponse<User>>(`${this.apiUrl}/me`)
+      .pipe(
+        map(response => {
+          if (response.success && response.data) {
+            // Update the cached user
+            localStorage.setItem('user', JSON.stringify(response.data));
+            this.currentUserSubject.next(response.data);
+            return response.data;
+          }
+          throw new Error('Failed to get user');
+        }),
+        catchError(error => {
+          return throwError(() => error);
+        })
+      );
+  }
+
+  getCurrentUserValue(): User | null {
     return this.currentUserSubject.value;
   }
 }

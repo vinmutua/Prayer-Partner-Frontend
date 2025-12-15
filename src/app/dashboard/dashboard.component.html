@@ -179,6 +179,7 @@
               <thead class="bg-gray-50">
                 <tr>
                   <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Period</th>
+                  <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Role</th>
                   <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Partner</th>
                   <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Prayer Theme</th>
                 </tr>
@@ -187,6 +188,12 @@
                 <tr *ngFor="let pairing of pairingHistory">
                   <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                     {{ formatDate(pairing.startDate) }} - {{ formatDate(pairing.endDate) }}
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"
+                          [ngClass]="isPrayingFor(pairing) ? 'bg-blue-100 text-blue-800' : 'bg-green-100 text-green-800'">
+                      {{ getPartnerRole(pairing) }}
+                    </span>
                   </td>
                   <td class="px-6 py-4 whitespace-nowrap">
                     <div class="text-sm font-medium text-gray-900">
@@ -212,6 +219,15 @@
                 <span class="text-xs font-medium text-gray-500 uppercase">Period</span>
                 <div class="text-sm text-gray-700 font-medium">
                   {{ formatDate(pairing.startDate) }} - {{ formatDate(pairing.endDate) }}
+                </div>
+              </div>
+              <div class="mb-2">
+                <span class="text-xs font-medium text-gray-500 uppercase">Role</span>
+                <div class="mb-1">
+                  <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"
+                        [ngClass]="isPrayingFor(pairing) ? 'bg-blue-100 text-blue-800' : 'bg-green-100 text-green-800'">
+                    {{ getPartnerRole(pairing) }}
+                  </span>
                 </div>
               </div>
               <div class="mb-2">

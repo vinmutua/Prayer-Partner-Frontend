@@ -33,7 +33,12 @@ export class ResetPasswordComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.token = this.route.snapshot.queryParams['token'] || '';
+    // Get token from query params and decode it (in case it was URL encoded)
+    const rawToken = this.route.snapshot.queryParams['token'] || '';
+    this.token = decodeURIComponent(rawToken);
+
+    console.log('Reset token received:', this.token ? `${this.token.substring(0, 10)}...` : 'none');
+
     if (!this.token) {
       this.errorMessage = 'Invalid reset token. Please request a new password reset.';
     }
@@ -62,7 +67,7 @@ export class ResetPasswordComponent implements OnInit {
           this.successMessage = response.message || 'Password has been reset successfully!';
           this.resetPasswordForm.reset();
           this.isSubmitting = false;
-          
+
           // Redirect to login after a short delay
           setTimeout(() => {
             this.router.navigate(['/login']);
